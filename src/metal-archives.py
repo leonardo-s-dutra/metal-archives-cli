@@ -5,7 +5,6 @@ try:
     from bs4 import BeautifulSoup
     import requests
     from requests import Response
-    import argparse
     from argparse import ArgumentParser
     import json
 except ImportError as e:
@@ -17,7 +16,7 @@ BASE_URL : Final[str] = 'https://www.metal-archives.com'
 
 
 def main() -> None:
-    parser : argparse.ArgumentParser = argparse.ArgumentParser(
+    parser : ArgumentParser = ArgumentParser(
         description='Metal Archives CLI',
     )
     parser.add_argument(
@@ -26,7 +25,7 @@ def main() -> None:
         help='Name of the band to be searched'
     )
 
-    args  = parser.parse_args()
+    args = parser.parse_args()
 
     band : str = args.band
     url : str = f'{BASE_URL}/bands/{band.lower().replace(' ', '_')}'
