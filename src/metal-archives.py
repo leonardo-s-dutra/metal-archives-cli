@@ -1,10 +1,8 @@
-from typing import Final
+from typing import List, Final
 import sys
 
 try:
-    from bs4 import BeautifulSoup
-    import requests
-    from requests import Response
+    import enmet
     from argparse import ArgumentParser
     import json
 except ImportError as e:
@@ -12,7 +10,16 @@ except ImportError as e:
     sys.exit()
 
 
-BASE_URL : Final[str] = 'https://www.metal-archives.com'
+def print_genres(band : enmet.Band) -> None:
+    print('\tGenres\t: ', end='')
+
+    genres : List[str] = band.genres
+
+    if len(genres) == 1:
+        print(f'{genres[0]}')
+    else:
+        print(
+            f'{', '.join(band.genres[:-1])}, {band.genres[-1]}')
 
 
 def main() -> None:
@@ -24,21 +31,37 @@ def main() -> None:
         required=True,
         help='Name of the band to be searched'
     )
+    parser.add_argument(
+        '--genre',
+        required=False,
+        action='store_true',
+        help='Get lyrical themes from searched band'
+    )
 
     args = parser.parse_args()
 
-    band : str = args.band
-    url : str = f'{BASE_URL}/bands/{band.lower().replace(' ', '_')}'
-    request : Response = requests.get(
-        url=url,
-        headers={'User-Agent': 'Mozilla/5.0'}
-    )
+    band_name : str = args.band
+    genres_flag : bool = args.genre
 
-    if not request.ok:
-        print(f'Request Error: status code {request.status_code}')
-        sys.exit()
+    if band_name == None:
+        return
+    
+    try:
+        band_search_result : enmet.Band = enmet.search_bands(
+            name=band_name,
+            strict=True
+        )[0]
+    except IndexError:
+        print('\n\tBand not found\n')
+        return
 
-    soup : BeautifulSoup = BeautifulSoup(request.text, 'html.parser')
+    print('')
+    print(f'\tBand\t: {band_search_result.name}')
+
+    if genres_flag == True:
+        print_genres(band_search_result)
+    
+    print('')
 
 
 if __name__ == '__main__':
