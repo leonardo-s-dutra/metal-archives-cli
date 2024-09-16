@@ -10,7 +10,7 @@ except ImportError as e:
 
 
 def print_genres(band : enmet.Band) -> None:
-    print('\tGenres\t: ', end='')
+    print('\tGenres\t\t: ', end='')
 
     genres : List[str] = band.genres
 
@@ -18,7 +18,18 @@ def print_genres(band : enmet.Band) -> None:
         print(f'{genres[0]}')
     else:
         print(
-            f'{', '.join(band.genres[:-1])}, {band.genres[-1]}')
+            f'{', '.join(genres[:-1])}, {genres[-1]}')
+
+def print_lyrical_themes(band : enmet.Band) -> None:
+    print('\tLyrical Themes\t: ', end='')
+
+    lyrical_themes : List[str] = band.lyrical_themes
+
+    if len(lyrical_themes) == 1:
+        print(f'{lyrical_themes[0]}')
+    else:
+        print(
+            f'{', '.join(lyrical_themes[:-1])}, {lyrical_themes[-1]}')
 
 
 def main() -> None:
@@ -34,6 +45,12 @@ def main() -> None:
         '--genre',
         required=False,
         action='store_true',
+        help='Get genres from searched band'
+    )
+    parser.add_argument(
+        '--lyrical_themes',
+        required=False,
+        action='store_true',
         help='Get lyrical themes from searched band'
     )
 
@@ -41,6 +58,7 @@ def main() -> None:
 
     band_name : str = args.band
     genres_flag : bool = args.genre
+    lyrical_themes_flag : bool = args.lyrical_themes
 
     if band_name == None:
         return
@@ -55,11 +73,14 @@ def main() -> None:
         return
 
     print('')
-    print(f'\tBand\t: {band_search_result.name}')
+    print(f'\tBand\t\t: {band_search_result.name}')
 
     if genres_flag == True:
         print_genres(band_search_result)
     
+    if lyrical_themes_flag == True:
+        print_lyrical_themes(band_search_result)
+
     print('')
 
 
