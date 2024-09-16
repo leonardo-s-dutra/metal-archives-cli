@@ -4,7 +4,6 @@ import sys
 try:
     import enmet
     from argparse import ArgumentParser
-    import json
 except ImportError as e:
     print(f'Import Error: {e}')
     sys.exit()
